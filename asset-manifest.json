@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.css": "/Healthcare-Helper/tree/main/frontend/static/css/main.e6e0c8ba.css",
-    "main.js": "/Healthcare-Helper/tree/main/frontend/static/js/main.d2072064.js",
-    "index.html": "/Healthcare-Helper/tree/main/frontend/index.html",
-    "main.e6e0c8ba.css.map": "/Healthcare-Helper/tree/main/frontend/static/css/main.e6e0c8ba.css.map",
-    "main.d2072064.js.map": "/Healthcare-Helper/tree/main/frontend/static/js/main.d2072064.js.map"
+    "main.css": "/prescottcassy/Healthcare-Helper/blob/main/frontend/src/App.js/static/css/main.e6e0c8ba.css",
+    "main.js": "/prescottcassy/Healthcare-Helper/blob/main/frontend/src/App.js/static/js/main.d2072064.js",
+    "index.html": "/prescottcassy/Healthcare-Helper/blob/main/frontend/src/App.js/index.html",
+    "main.e6e0c8ba.css.map": "/prescottcassy/Healthcare-Helper/blob/main/frontend/src/App.js/static/css/main.e6e0c8ba.css.map",
+    "main.d2072064.js.map": "/prescottcassy/Healthcare-Helper/blob/main/frontend/src/App.js/static/js/main.d2072064.js.map"
   },
   "entrypoints": [
     "static/css/main.e6e0c8ba.css",
