@@ -1,0 +1,11 @@
+pandas>=1.5.0
+requests>=2.31.0
+PyYAML>=6.0
+python-dotenv>=1.0.0
+loguru>=0.7.0
+reportlab>=3.6.12
+qrcode>=7.4.2
+fastapi>=0.110.0
+uvicorn>=0.29.0  # Optional: for running FastAPI locally
+pydantic>=2.5.0  # Optional: for schema validation
+striprtf>=0.0.10
