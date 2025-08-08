@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import QueryForm from "./components/QueryForm";
 import ResponseCard from "./components/ResponseCard";
-import "https://github.com/prescottcassy/Healthcare-Helper/blob/main/frontend/src/styles.css";
+import "./styles.css";
 
 function App() {
   const [response, setResponse] = useState(null);
