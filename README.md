@@ -20,3 +20,35 @@ healthcare-helper/
 └── README.md 
 
 
+
+## Getting Started
+
+### 1. Clone the repo
+```bash
+git clone https://github.com/your-username/healthcare-helper.git
+cd healthcare-helper
+```
+
+### 2. Install dependencies
+Each folder is self-contained. Start with:
+
+```
+cd frontend
+npm install
+
+cd ../backend
+pip install -r requirements.txt
+```
+
+## Goals
+
+• 	Transparent healthcare cost comparison
+• 	Modular architecture for easy contribution
+• 	Beginner-friendly onboarding and reproducible environments
+• 	Playful, welcoming UI design
+
+
+
+
+
+
