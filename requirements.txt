@@ -16,3 +16,9 @@ python-multipart
 opencv-python
 numpy
 regex
+PyYAML
+loguru
+reportlab
+qrcode
+pydantic
+striprtf

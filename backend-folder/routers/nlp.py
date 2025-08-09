@@ -2,6 +2,7 @@
 
 from fastapi import APIRouter
 from pydantic import BaseModel
+from typing import Optional
 
 router = APIRouter()
 
@@ -9,9 +10,9 @@ class QueryRequest(BaseModel):
     text: str
 
 class EntitiesResponse(BaseModel):
-    procedure: str = None
-    location: str = None
-    insurance: str = None
+    procedure: Optional[str] = None
+    location: Optional[str] = None
+    insurance: Optional[str] = None
 
 @router.post("/query", response_model=EntitiesResponse)
 async def extract_entities(request: QueryRequest):
