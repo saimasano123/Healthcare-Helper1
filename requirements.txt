@@ -1,0 +1,12 @@
+pdf2image
+chromadb
+pandas
+requests
+pillow
+pytesseract
+langchain
+langchain-community
+faiss-cpu
+python-dotenv
+fastai
+fastapi uvicorn
