@@ -3,21 +3,31 @@ import "./css/main.css";
 
 function App() {
   const [response, setResponse] = useState("Waiting for your input...");
+  const [recommendations, setRecommendations] = useState([]);
+  const [costSummary, setCostSummary] = useState(null);
   const [question, setQuestion] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setResponse("Loading...");
+    setRecommendations([]);
+    setCostSummary(null);
     try {
-const res = await fetch("http://localhost:8000/api/nlp/query", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ text: question }),
-});
-const data = await res.json();
-setResponse(
-  `Procedure: ${data.procedure || "N/A"}, Location: ${data.location || "N/A"}, Insurance: ${data.insurance || "N/A"}`
-);
+      const res = await fetch("http://localhost:8000/api/nlp/query", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: question }),
+      });
+      const data = await res.json();
+      if (data.response) {
+        setResponse("Here are your recommendations:");
+        setRecommendations(data.response.recommendations || []);
+        setCostSummary(data.response.cost_summary || null);
+      } else if (data.error) {
+        setResponse(data.error);
+      } else {
+        setResponse("No recommendations found.");
+      }
     } catch (error) {
       setResponse("An error occurred. Please try again.");
     }
@@ -45,7 +55,28 @@ setResponse(
         <button type="submit">Submit</button>
       </form>
       <div className="response-card">
-        {response}
+        <p>{response}</p>
+        {recommendations.length > 0 && (
+          <div>
+            <h3>Recommendations:</h3>
+            <ul>
+              {recommendations.map((rec, idx) => (
+                <li key={idx}>
+                  <strong>{rec.procedure_name}</strong> at {rec.provider_name} ({rec.location})<br />
+                  Cost: ${rec.patient_pays}<br />
+                  Quality: {rec.quality_rating}/5<br />
+                  Relevance: {rec.relevance_score}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {costSummary && (
+          <div>
+            <h3>Cost Summary:</h3>
+            <pre>{JSON.stringify(costSummary, null, 2)}</pre>
+          </div>
+        )}
       </div>
     </div>
   );
