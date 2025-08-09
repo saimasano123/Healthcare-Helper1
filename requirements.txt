@@ -10,7 +10,7 @@ faiss-cpu
 python-dotenv
 fastai
 fastapi 
-uvicorn
+uvicorn [standard]
 python-multipart
 
 opencv-python
