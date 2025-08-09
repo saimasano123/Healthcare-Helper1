@@ -8,17 +8,18 @@ function App() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setResponse("Loading...");
-    // Example: send to backend API
     try {
-      const res = await fetch("http://localhost:8000/your-endpoint", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question }),
-      });
-      const data = await res.json();
-      setResponse(data.answer || "No response from backend.");
-    } catch (err) {
-      setResponse("Error contacting backend.");
+const res = await fetch("http://localhost:8000/api/nlp/query", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ text: question }),
+});
+const data = await res.json();
+setResponse(
+  `Procedure: ${data.procedure || "N/A"}, Location: ${data.location || "N/A"}, Insurance: ${data.insurance || "N/A"}`
+);
+    } catch (error) {
+      setResponse("An error occurred. Please try again.");
     }
   };
 
