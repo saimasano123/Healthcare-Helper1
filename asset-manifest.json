@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/prescottcassy/Healthcare-Helper/static/css/main.c9c505d0.css",
-    "main.js": "/prescottcassy/Healthcare-Helper/static/js/main.87e44a67.js",
-    "index.html": "/prescottcassy/Healthcare-Helper/index.html",
-    "main.c9c505d0.css.map": "/prescottcassy/Healthcare-Helper/static/css/main.c9c505d0.css.map",
-    "main.87e44a67.js.map": "/prescottcassy/Healthcare-Helper/static/js/main.87e44a67.js.map"
+    "main.css": "/Healthcare-Helper/static/css/main.e6e0c8ba.css",
+    "main.js": "/Healthcare-Helper/static/js/main.d2072064.js",
+    "index.html": "/Healthcare-Helper/index.html",
+    "main.e6e0c8ba.css.map": "/Healthcare-Helper/static/css/main.e6e0c8ba.css.map",
+    "main.d2072064.js.map": "/Healthcare-Helper/static/js/main.d2072064.js.map"
   },
   "entrypoints": [
-    "static/css/main.c9c505d0.css",
-    "static/js/main.87e44a67.js"
+    "static/css/main.e6e0c8ba.css",
+    "static/js/main.d2072064.js"
   ]
 }
