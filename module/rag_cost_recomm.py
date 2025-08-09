@@ -8,10 +8,6 @@ Original file is located at
 """
 
 """
-Healthcare AI Assistant - Complete Implementation
-Group 7: Cassy Cormier, Christian Mpabuka, Judith Barrios-Rodriguez, Saima Sano
-ITAI 2377 - Data Science - Prof. Vishwa Tao
-
 This module implements the three core components:
 1. Vector Database for RAG
 2. Cost Comparison Engine
