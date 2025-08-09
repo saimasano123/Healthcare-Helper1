@@ -1,0 +1,5 @@
+Filename: diabetes_notes.txt
+
+Diabetes is a chronic condition that affects how the body processes blood sugar. 
+Patients may require insulin therapy and lifestyle changes. 
+Monitoring blood glucose levels is essential for effective management.

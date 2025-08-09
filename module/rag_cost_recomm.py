@@ -17,7 +17,6 @@ This module implements the three core components:
 2. Cost Comparison Engine
 3. Recommendation Logic
 """
-!pip install chromadb pandas numpy scikit-learn
 import numpy as np
 import pandas as pd
 from typing import List, Dict, Any, Tuple, Optional
@@ -147,8 +146,8 @@ class HealthcareVectorDatabase:
 
         logger.info(f"Added {len(procedures)} procedures to vector database")
 
-    def search_procedures(self, query: str, location: str = None,
-                         insurance_plan: str = None, n_results: int = 10) -> List[Dict]:
+    def search_procedures(self, query: str, location: Optional[str] = None,
+                         insurance_plan: Optional[str] = None, n_results: int = 10) -> List[Dict]:
         """Search for procedures using natural language query"""
         # Enhance query with location and insurance if provided
         enhanced_query = query
@@ -168,39 +167,57 @@ class HealthcareVectorDatabase:
 
         # Process and filter results
         processed_results = []
-        for i in range(len(results['ids'][0])):
-            metadata = results['metadatas'][0][i]
-            distance = results['distances'][0][i]
+        # Check if results and required subfields are not None
+        if (
+            results is not None and
+            results.get('ids') is not None and
+            results.get('metadatas') is not None and
+            results.get('distances') is not None and
+            results['ids'] and results['metadatas'] and results['distances']
+        ):
+            for i in range(len(results['ids'][0])):
+                metadata = results['metadatas'][0][i]
+                distance = results['distances'][0][i]
 
-            logger.info(f"Result {i}: {metadata['procedure_name']} (distance: {distance:.3f})")
+                logger.info(f"Result {i}: {metadata['procedure_name']} (distance: {distance:.3f})")
 
-            # Filter by insurance if specified
-            if insurance_plan:
-                accepted_plans = json.loads(metadata['insurance_accepted'])
-                if insurance_plan not in accepted_plans:
-                    continue
+                # Filter by insurance if specified
+                if insurance_plan:
+                    insurance_accepted_value = metadata['insurance_accepted']
+                    if not isinstance(insurance_accepted_value, str):
+                        insurance_accepted_value = str(insurance_accepted_value)
+                    accepted_plans = json.loads(insurance_accepted_value)
+                    if insurance_plan not in accepted_plans:
+                        continue
 
-            # Filter by location if specified
-            if location and location.lower() not in metadata['location'].lower():
-                continue
+                # Filter by location if specified
+                if location:
+                    provider_location = metadata.get('location', '')
+                    if not isinstance(provider_location, str):
+                        provider_location = str(provider_location)
+                    if location.lower() not in provider_location.lower():
+                        continue
 
-            # Calculate proper relevance score (distance to similarity conversion)
-            distance = results['distances'][0][i]
-            # Convert distance to similarity: closer distance = higher similarity
-            # Typical ChromaDB distances range from 0 to 2, so we normalize
-            relevance = max(0, 1 - (distance / 2.0))  # Normalize to 0-1 range
+                # Calculate proper relevance score (distance to similarity conversion)
+                distance = results['distances'][0][i]
+                # Convert distance to similarity: closer distance = higher similarity
+                # Typical ChromaDB distances range from 0 to 2, so we normalize
+                relevance = max(0, 1 - (distance / 2.0))  # Normalize to 0-1 range
 
-            processed_results.append({
-                'cpt_code': metadata['cpt_code'],
-                'procedure_name': metadata['procedure_name'],
-                'base_cost': float(metadata['base_cost']),  # Ensure float conversion
-                'provider_id': metadata['provider_id'],  # Add missing provider_id
-                'provider_name': metadata['provider_name'],
-                'location': metadata['location'],
-                'specialty': metadata['specialty'],
-                'quality_rating': float(metadata['quality_rating']),  # Ensure float conversion
-                'relevance_score': relevance  # Now properly normalized
-            })
+                processed_results.append({
+                    'cpt_code': metadata['cpt_code'],
+                    'procedure_name': metadata['procedure_name'],
+                    'base_cost': float(metadata['base_cost']) if metadata['base_cost'] is not None else 0.0,  # Ensure float conversion and handle None
+                    'provider_id': metadata['provider_id'],  # Add missing provider_id
+                    'provider_name': metadata['provider_name'],
+                    'location': metadata['location'],
+                    'specialty': metadata['specialty'],
+                    'quality_rating': float(metadata['quality_rating']) if metadata['quality_rating'] is not None else 0.0,  # Ensure float conversion and handle None
+                    'relevance_score': relevance  # Now properly normalized
+                })
+        else:
+            logger.warning("No results returned from vector database or results are None.")
+            # No results to process; processed_results will remain empty.
 
         return processed_results
 
@@ -270,7 +287,7 @@ class CostComparisonEngine:
             'is_in_network': is_in_network
         }
 
-    def compare_costs(self, query: str, patient: PatientInfo, location: str = None) -> List[Dict]:
+    def compare_costs(self, query: str, patient: PatientInfo, location: Optional[str] = None) -> List[Dict]:
         """Compare costs across multiple providers for a given procedure"""
         # Search for relevant procedures
         procedures = self.vector_db.search_procedures(
