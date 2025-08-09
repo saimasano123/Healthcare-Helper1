@@ -12,14 +12,17 @@ else:
 load_dotenv(dotenv_path=env_path)
 
 def load_api_config(service: str) -> dict:
-    """
-    Load API key and URL for a given service name.
-    Example: service='fda' → FDA_API_KEY, FDA_BASE_URL
-    """
     key = os.getenv(f"{service.upper()}_API_KEY")
-    url = os.getenv(f"{service.upper()}_BASE_URL")
+    if service.lower() == "cms_api":
+        url = os.getenv(f"{service.upper()}_URL")
+        # Only require URL for CMS API
+        if not url: 
+            print(f"[WARN] Missing API URL for '{service}'. Check environment file at {env_path}")
+        return {"base_url": url}  # Removed api_key for cms_api
+    else:
+        url = os.getenv(f"{service.upper()}_BASE_URL")
+        if not key or not url:
+            print(f"[WARN] Missing API config for '{service}'. Check environment file at {env_path}")
+        return {"api_key": key, "base_url": url}
 
-    if not key or not url:
-        print(f"[WARN] Missing API config for '{service}'. Check environment file at {env_path}")
-
-    return {"api_key": key, "base_url": url}
+print("CMS_API_URL:", os.getenv("CMS_API_URL"))

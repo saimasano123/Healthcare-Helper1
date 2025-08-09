@@ -14,14 +14,17 @@ logger = logging.getLogger(__name__)
 
 def fetch_cms_data(prefix="cms_api") -> pd.DataFrame | None:
     config = load_api_config(prefix)
-    api_key = config["api_key"]
     api_url = config["base_url"]
+    api_key = config.get("api_key", None)  # Use .get() to avoid KeyError
 
-    if not api_key or not api_url:
-        logger.error(f"Missing API config for {prefix}.")
+    if not api_url:
+        logger.error(f"Missing API URL for {prefix}.")
         return None
 
-    headers = {"Authorization": f"Bearer {api_key}"}
+    headers = {}
+    if api_key:
+        headers["Authorization"] = f"Bearer {api_key}"
+
     response = requests.get(api_url, headers=headers)
 
     print(f"[DEBUG] Status Code: {response.status_code}")
