@@ -12,3 +12,7 @@ fastai
 fastapi 
 uvicorn
 python-multipart
+
+opencv-python
+numpy
+regex
