@@ -6,7 +6,7 @@ import logging
 import zipfile
 import os
 import re
-import test_rtf
+from test_rtf import rtf_to_txt as rtf_to_text
 from utils.export import export_chunks_to_json
 
 DATASETS_DIR = os.path.join("datasets", "clinical-conversational-datasets")
