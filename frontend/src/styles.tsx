@@ -1,4 +1,4 @@
-import './styles.css'; // Global styles
+import './css/main.css'; // Global styles
 import { Container } from './styles'; // Styled component
 
 function App() {
