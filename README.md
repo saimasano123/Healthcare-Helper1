@@ -5,11 +5,11 @@ A modular AI-powered assistant for healthcare cost transparency and insurance an
 ---
 
 ## Repo Structure
-healthcare-helper/ ├
-── frontend/              
-### React UI for user interaction 
+healthcare-helper/ 
+├── frontend/              
+#### React UI for user interaction 
 ├── backend/               
-### FastAPI server for API endpoints and orchestration 
+#### FastAPI server for API endpoints and orchestration 
 ├── insurance-analyzer/   
 #### Python tools for parsing and analyzing insurance data 
 ├── data-ingestion/       
@@ -32,9 +32,19 @@ healthcare-helper/ ├
 git clone https://github.com/your-username/healthcare-helper.git
 cd healthcare-helper
 ```
-### 2. Install dependencies
-Each folder is self-contained. Start with:
+### 2. Backend Setup (Recommended: Docker)
+To work on this project, start by building and running the backend using the Dockerfile in the main folder:
+```bash
+docker build -t healthcare-helper .
+docker run -p 8000:8000 healthcare-helper
 ```
+
+This ensures all dependencies are installed and the backend runs in a reproducible environment.
+
+---
+
+If you prefer manual setup, you can still install dependencies in each folder:
+```bash
 cd frontend
 npm install
 
