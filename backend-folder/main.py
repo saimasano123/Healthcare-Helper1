@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import insurance, nlp  # dono routers import kar liye
+from .routers import insurance, nlp
 
 app = FastAPI(
     title="Healthcare AI Assistant Backend",
@@ -8,7 +8,6 @@ app = FastAPI(
     version="1.0"
 )
 
-# Add CORS middleware here
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Or specify your frontend URL for better security

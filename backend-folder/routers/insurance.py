@@ -1,5 +1,5 @@
 from fastapi import APIRouter, UploadFile, File
-from services.ocr_service import extract_insurance_info
+from ..services.ocr_service import extract_insurance_info
 
 router = APIRouter()
 
