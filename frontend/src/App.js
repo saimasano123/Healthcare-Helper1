@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import QueryForm from "./components/QueryForm";
 import ResponseCard from "./components/ResponseCard";
-import "./styles.css";
+import './css/main.css';
 
 function App() {
   const [response, setResponse] = useState(null);
