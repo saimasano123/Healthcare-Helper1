@@ -4,9 +4,9 @@ import pandas as pd
 import requests
 import os
 import logging
-from utils.tagger import tag_chunk
-from utils.credentials import load_api_config
-from utils.chunk_logger import log_chunk_ids
+from ...utils.tagger import tag_chunk
+from ...utils.credentials import load_api_config
+from ...utils.chunk_logger import log_chunk_ids
 from dotenv import load_dotenv
 
 logging.basicConfig(level=logging.INFO)

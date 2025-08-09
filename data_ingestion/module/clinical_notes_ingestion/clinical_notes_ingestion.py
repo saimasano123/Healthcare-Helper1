@@ -3,35 +3,14 @@
 import pandas as pd
 import uuid
 import logging
-import zipfile
 import os
 import re
-from test_rtf import rtf_to_txt as rtf_to_text
-from utils.export import export_chunks_to_json
+from ...test_rtf import rtf_to_txt as rtf_to_text
+from ...utils.export import export_chunks_to_json
 
-DATASETS_DIR = os.path.join("datasets", "clinical-conversational-datasets")
-ZIP_FILE = "PhysicianClinicalNotes.zip"
+DATASETS_DIR = os.path.join("data_ingestion", "dataset")
 
 logger = logging.getLogger(__name__)
-
-def extract_zip(zip_path, extract_to):
-    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        for zip_entry in zip_ref.namelist():
-            # Skip if it's a folder inside the zip
-            if zip_entry.endswith('/'):
-                continue
-
-            # Just get the filename—ignore internal folders
-            file_name = os.path.basename(zip_entry)
-            if not file_name:
-                continue  # e.g. zip_entry might be a folder
-
-            target_path = os.path.join(extract_to, file_name)
-
-            with zip_ref.open(zip_entry) as source, open(target_path, 'wb') as target:
-                target.write(source.read())
-
-    return extract_to
 
 def chunk_clinical_note(note: str) -> dict:
     sections = {}
@@ -104,20 +83,40 @@ def parse_notes_from_folder(folder_path):
 
     return ingested_chunks
 
-def ingest_zipped_notes():
-    zip_path = os.path.join(DATASETS_DIR, ZIP_FILE)
-    temp_extract_dir = os.path.join(DATASETS_DIR, "unzipped_notes")
+def ingest_local_rtf_notes():
+    """
+    Ingests all .rtf files in the local data_ingestion/dataset directory,
+    extracts text, chunks notes, and exports to JSON.
+    """
+    rtf_dir = os.path.join("data_ingestion", "dataset")
+    ingested_chunks = []
 
-    os.makedirs(temp_extract_dir, exist_ok=True)
-    extract_zip(zip_path, temp_extract_dir)
+    for filename in os.listdir(rtf_dir):
+        if filename.endswith(".rtf"):
+            file_path = os.path.join(rtf_dir, filename)
+            with open(file_path, encoding="utf-8", errors="ignore") as f:
+                rtf_content = f.read()
+                note = rtf_to_text(rtf_content).strip()
+                if note:
+                    section_chunks = chunk_clinical_note(note)
+                    for section, section_text in section_chunks.items():
+                        chunk = {
+                            "text": section_text,
+                            "metadata": {
+                                "source_file": filename,
+                                "note_type": section,
+                                "chunk_id": str(uuid.uuid4()),
+                                "section": section
+                            }
+                        }
+                        ingested_chunks.append(chunk)
 
-    chunks = parse_notes_from_folder(temp_extract_dir)
-    logger.info(f"Ingested {len(chunks)} notes.")
-
-    export_chunks_to_json(chunks, output_path="output/clinical_chunks.json")
-    return chunks
+    logger.info(f"Ingested {len(ingested_chunks)} notes.")
+    export_chunks_to_json(ingested_chunks, output_path="output/clinical_chunks.json")
+    return ingested_chunks
 
 if __name__ == "__main__":
-    all_chunks = ingest_zipped_notes()
+    all_chunks = ingest_local_rtf_notes()
     print(f"Ingested {len(all_chunks)} clinical note chunks.")
+
 

@@ -1,0 +1,29 @@
+[
+  {
+    "text": "[Patient Name] is a [Age]-year-old white female who is a regular patient of [Physician Name].  She was brought into the hospital by her family when they found her unconscious and unresponsive.  They attempted to revive her at home, could not do so.  Her husband put her in the car and drove her from the [City] area to our [Department].  When she arrived in our [Department], she was obtunded.  She was cyanotic.  She had an initial O2 sat of 49%.  There was history of her possibly taking an excessive amount of her medicines including Norco, Fioricet, and diazepam.  She was given Narcan in the [Department] and supplemental oxygen and shortly thereafter she awakened, began breathing better, and her sats rose on up to the 90 plus percent range.  She was wheezing, was given neb treatments, and was started on Solu-Medrol.  We then found that her initial blood sugar was in the mid-300s.  As best I can tell, she is a new onset diabetic.  Her past history does include coronary artery disease.  She has had one stent placed.  COPD, she is a fairly heavy smoker.  She has a lot of chronic pain and anxiety issues.  She has chronic headaches.  Still do not have a complete list of her home meds.  Her children arrived and they indicated that she was known to take excessive amounts of her medicine and they believe that is what happened here.  We will get a complete database at a later point in time in terms of all of her past history issues.\n\nPHYSICAL EXAMINATION:\nGENERAL:  A thin lady.\nHEENT:  No sign of any head trauma.  Her pupils are equal and reactive to light.  Extraocular movements intact.  She has a positive gag.  She has no bruits that I can auscultate.\nHEART:  She has regular rate and rhythm.\nLUNGS:  She has diffused expiratory wheezing and a very congested cough.\nABDOMEN:  Soft and nontender.\nEXTREMITIES:  She has no cyanosis, clubbing, or edema.  She has no obvious joint findings.\nNEUROLOGIC:  She is generally weak, but certainly there are no focal neurological findings.  Of note is the fact that her skin is well tanned, almost copper colored in appearance.\n\nLABORATORY DATA:  As I noted, her blood sugar was mid-300s.  The remainder of her lab work was unremarkable as are radiographic studies.\n \nIMPRESSION/",
+    "metadata": {
+      "source_file": "4182_1046_4052019_1147.rtf",
+      "note_type": "chief complaint",
+      "chunk_id": "345c1292-51fd-40d8-a3e5-3b5b66aa4b11",
+      "section": "chief complaint"
+    }
+  },
+  {
+    "text": "Exacerbation COPD, probable over sedation due to over-medication with narcotics and benzodiazepines.  We are admitting her for IV steroids, Zithromax, neb treatments, and oxygen.  I am not going to continue the diazepam, but I am starting her on phenobarbital as she will be withdrawing from benzos.",
+    "metadata": {
+      "source_file": "4182_1046_4052019_1147.rtf",
+      "note_type": "plan",
+      "chunk_id": "8ebfe710-f913-4dd3-a899-9c293203cf72",
+      "section": "plan"
+    }
+  },
+  {
+    "text": "Hypoglycemia, type 2 diabetes on sulfonylurea, anemic with an H and H of 9 and 26, MCV 81, stage V chronic kidney disease with a creatinine of 3.62.  We are going to proceed with IV fluids.  We will monitor her sugars, obviously holding the sulphonyl urea, may use sliding scale if needed.  I am going to let that glimepiride wash out of her system.",
+    "metadata": {
+      "source_file": "4182_1046_4052019_1144.rtf",
+      "note_type": "plan",
+      "chunk_id": "e1c702b0-ff62-4059-acfa-ac169b67b2db",
+      "section": "plan"
+    }
+  }
+]
