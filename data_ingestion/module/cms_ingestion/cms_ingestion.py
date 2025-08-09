@@ -14,8 +14,8 @@ logger = logging.getLogger(__name__)
 
 def fetch_cms_data(prefix="cms_api") -> pd.DataFrame | None:
     config = load_api_config(prefix)
-    api_key = config["key"]
-    api_url = config["url"]
+    api_key = config["api_key"]
+    api_url = config["base_url"]
 
     if not api_key or not api_url:
         logger.error(f"Missing API config for {prefix}.")
