@@ -1,23 +1,55 @@
-import React from 'react';
+import React, { useState } from "react";
 
 function QueryForm() {
+  const [query, setQuery] = useState("");
+  const [hasInsurance, setHasInsurance] = useState(true);
+  const [recommendations, setRecommendations] = useState([]);
+
+  async function getRecommendations() {
+    const response = await fetch("http://localhost:8000/recommend", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query, has_insurance: hasInsurance })
+    });
+    const data = await response.json();
+    setRecommendations(data.recommendations || []);
+  }
+
   return (
-    <form className="form">
-      <label htmlFor="insurance-upload" className="upload-label">
-        📄 Please upload your health insurance document (PDF, JPG, or PNG).
-      </label>
+    <div>
       <input
-        type="file"
-        id="insurance-upload"
-        name="insurance"
-        accept=".pdf,.jpg,.jpeg,.png"
+        type="text"
+        value={query}
+        onChange={e => setQuery(e.target.value)}
+        placeholder="Enter your question"
       />
-      <textarea
-        rows="6"
-        placeholder="Describe your healthcare concern or question..."
-      ></textarea>
-      <button type="submit">Submit</button>
-    </form>
+      <label>
+        <input
+          type="checkbox"
+          checked={hasInsurance}
+          onChange={e => setHasInsurance(e.target.checked)}
+        />
+        Has Insurance
+      </label>
+      <button onClick={getRecommendations}>Get Recommendations</button>
+
+      {/* Display recommendations */}
+      <div>
+        {recommendations.length > 0 ? (
+          recommendations.map((rec, idx) => (
+            <div key={idx} className="recommendation-card">
+              <h3>{rec.procedure_name}</h3>
+              <p>Provider: {rec.provider_name}</p>
+              <p>Cost: ${rec.patient_pays}</p>
+              <p>Location: {rec.location}</p>
+              <p>Reason: {rec.recommendation_reason}</p>
+            </div>
+          ))
+        ) : (
+          <p>No recommendations yet.</p>
+        )}
+      </div>
+    </div>
   );
 }
 

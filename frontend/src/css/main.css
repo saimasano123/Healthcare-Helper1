@@ -108,3 +108,27 @@ button:hover {
     width: 100%;
   }
 }
+
+.recommendation-card {
+  background: #f9f9ff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 12px 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  transition: box-shadow 0.2s;
+}
+
+.recommendation-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+}
+
+.recommendation-card h3 {
+  margin: 0 0 8px 0;
+  color: #2d3748;
+}
+
+.recommendation-card p {
+  margin: 4px 0;
+  color: #4a5568;
+}
