@@ -16,4 +16,4 @@ COPY . .
 EXPOSE 8000
 
 # Default command (adjust as needed)
-CMD ["python", "backend-folder/main.py"]
+CMD ["gunicorn", "--workers", "4", "--bind", "0.0.0.0:8000", "backend-folder.main:app"]
