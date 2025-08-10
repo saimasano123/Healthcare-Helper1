@@ -3,13 +3,13 @@ from fastapi.middleware.cors import CORSMiddleware
 from .routers import insurance, nlp, chat
 import os
 
-import os
+import dotenv
+dotenv.load_dotenv()  # <-- Add this line to load .env variables
 
 OPEN_AI_KEY = os.getenv("OPEN_AI_KEY")
 
 if not OPEN_AI_KEY:
     raise ValueError("Missing OPEN_AI_KEY environment variable")
-
 
 app = FastAPI(
     title="Healthcare AI Assistant Backend",
@@ -32,4 +32,3 @@ app.include_router(chat.router, prefix="/api/chat", tags=["Chat"])
 @app.get("/")
 def root():
     return {"message": "Backend is working!"}
-    
