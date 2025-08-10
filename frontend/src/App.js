@@ -6,6 +6,8 @@ function App() {
   const [recommendations, setRecommendations] = useState([]);
   const [costSummary, setCostSummary] = useState(null);
   const [question, setQuestion] = useState("");
+  const [chats, setChats] = useState([]);
+  const [activeChat, setActiveChat] = useState(0);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -13,7 +15,7 @@ function App() {
     setRecommendations([]);
     setCostSummary(null);
     try {
-  const res = await fetch("https://healthcare-helper.onrender.com/api/nlp/query", {
+      const res = await fetch("https://healthcare-helper.onrender.com/api/nlp/query", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: question }),
@@ -23,6 +25,17 @@ function App() {
         setResponse("Here are your recommendations:");
         setRecommendations(data.response.recommendations || []);
         setCostSummary(data.response.cost_summary || null);
+        // Save chat history
+        setChats((prev) => [
+          ...prev,
+          {
+            question,
+            response: data.response,
+            recommendations: data.response.recommendations || [],
+            costSummary: data.response.cost_summary || null,
+          },
+        ]);
+        setActiveChat(chats.length); // Switch to new chat
       } else if (data.error) {
         setResponse(data.error);
       } else {
@@ -34,47 +47,91 @@ function App() {
   };
 
   return (
-    <div className="container">
-      <h1>Healthcare Helper</h1>
-      <form className="form" onSubmit={handleSubmit}>
-        <label htmlFor="insurance-upload" className="upload-label">
-          Please upload your health insurance document (PDF, JPG, or PNG).
-        </label>
-        <input
-          type="file"
-          id="insurance-upload"
-          name="insurance"
-          accept=".pdf,.jpg,.jpeg,.png"
-        />
-        <textarea
-          rows="6"
-          placeholder="Describe your healthcare concern or question..."
-          value={question}
-          onChange={(e) => setQuestion(e.target.value)}
-        ></textarea>
-        <button type="submit">Submit</button>
-      </form>
-      <div className="response-card">
-        <p>{response}</p>
-        {recommendations.length > 0 && (
-          <div>
-            <h3>Recommendations:</h3>
-            <ul>
-              {recommendations.map((rec, idx) => (
-                <li key={idx}>
-                  <strong>{rec.procedure_name}</strong> at {rec.provider_name} ({rec.location})<br />
-                  Cost: ${rec.patient_pays}<br />
-                  Quality: {rec.quality_rating}/5<br />
-                  Relevance: {rec.relevance_score}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        {costSummary && (
-          <div>
-            <h3>Cost Summary:</h3>
-            <pre>{JSON.stringify(costSummary, null, 2)}</pre>
+    <div className="main-layout">
+      <aside className="sidebar">
+        <h2>Chats</h2>
+        <button className="new-chat-btn" onClick={() => {
+          setQuestion("");
+          setResponse("Waiting for your input...");
+          setRecommendations([]);
+          setCostSummary(null);
+          setActiveChat(chats.length);
+        }}>+ New Chat</button>
+        <ul className="chat-list">
+          {chats.map((chat, idx) => (
+            <li key={idx} className={activeChat === idx ? "active-chat" : ""} onClick={() => {
+              setActiveChat(idx);
+              setQuestion(chat.question);
+              setResponse("Here are your recommendations:");
+              setRecommendations(chat.recommendations);
+              setCostSummary(chat.costSummary);
+            }}>
+              Chat {idx + 1}
+            </li>
+          ))}
+        </ul>
+      </aside>
+      <div className="container">
+        {(recommendations.length === 0 && costSummary === null) ? (
+          <>
+            <h1>Healthcare Helper</h1>
+            <form className="form" onSubmit={handleSubmit}>
+              <label htmlFor="insurance-upload" className="upload-label">
+                Please upload your health insurance document (PDF, JPG, or PNG).
+              </label>
+              <input
+                type="file"
+                id="insurance-upload"
+                name="insurance"
+                accept=".pdf,.jpg,.jpeg,.png"
+              />
+              <textarea
+                rows="6"
+                placeholder="Describe your healthcare concern or question..."
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+              ></textarea>
+              <button type="submit">Submit</button>
+            </form>
+          </>
+        ) : (
+          <div className="response-card">
+            <p>{response}</p>
+            {recommendations.length > 0 && (
+              <div>
+                <h3>Recommendations:</h3>
+                <div className="recommendations-list">
+                  {recommendations.map((rec, idx) => (
+                    <div key={idx} className="recommendation-card">
+                      <div className="rec-header">
+                        <span className="rec-icon">💡</span>
+                        <strong>{rec.procedure_name}</strong>
+                      </div>
+                      <div className="rec-details">
+                        <span className="rec-provider">🏥 {rec.provider_name}</span>
+                        <span className="rec-location">📍 {rec.location}</span>
+                      </div>
+                      <div className="rec-meta">
+                        <span className="rec-cost">💲{rec.patient_pays}</span>
+                        <span className="rec-quality">⭐ {rec.quality_rating}/5</span>
+                        <span className="rec-relevance">🔎 Relevance: {rec.relevance_score}</span>
+                      </div>
+                      {rec.reason && (
+                        <div className="rec-reason">
+                          <em>Why this is recommended:</em> {rec.reason}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {costSummary && (
+              <div>
+                <h3>Cost Summary:</h3>
+                <pre>{JSON.stringify(costSummary, null, 2)}</pre>
+              </div>
+            )}
           </div>
         )}
       </div>
