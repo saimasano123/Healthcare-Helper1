@@ -9,9 +9,11 @@ function App() {
   const [chats, setChats] = useState([]);
   const [activeChat, setActiveChat] = useState(0);
 
+  const [loading, setLoading] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setResponse("Loading...");
+    setLoading(true);
+    setResponse("");
     setRecommendations([]);
     setCostSummary(null);
     try {
@@ -44,35 +46,39 @@ function App() {
     } catch (error) {
       setResponse("An error occurred. Please try again.");
     }
+    setLoading(false);
   };
 
+  const showSidebar = recommendations.length > 0 || costSummary !== null;
   return (
     <div className="main-layout">
-      <aside className="sidebar">
-        <h2>Chats</h2>
-        <button className="new-chat-btn" onClick={() => {
-          setQuestion("");
-          setResponse("Waiting for your input...");
-          setRecommendations([]);
-          setCostSummary(null);
-          setActiveChat(chats.length);
-        }}>+ New Chat</button>
-        <ul className="chat-list">
-          {chats.map((chat, idx) => (
-            <li key={idx} className={activeChat === idx ? "active-chat" : ""} onClick={() => {
-              setActiveChat(idx);
-              setQuestion(chat.question);
-              setResponse("Here are your recommendations:");
-              setRecommendations(chat.recommendations);
-              setCostSummary(chat.costSummary);
-            }}>
-              Chat {idx + 1}
-            </li>
-          ))}
-        </ul>
-      </aside>
+      {showSidebar && (
+        <aside className="sidebar">
+          <h2>Chats</h2>
+          <button className="new-chat-btn" onClick={() => {
+            setQuestion("");
+            setResponse("Waiting for your input...");
+            setRecommendations([]);
+            setCostSummary(null);
+            setActiveChat(chats.length);
+          }}>+ New Chat</button>
+          <ul className="chat-list">
+            {chats.map((chat, idx) => (
+              <li key={idx} className={activeChat === idx ? "active-chat" : ""} onClick={() => {
+                setActiveChat(idx);
+                setQuestion(chat.question);
+                setResponse("Here are your recommendations:");
+                setRecommendations(chat.recommendations);
+                setCostSummary(chat.costSummary);
+              }}>
+                Chat {idx + 1}
+              </li>
+            ))}
+          </ul>
+        </aside>
+      )}
       <div className="container">
-        {(recommendations.length === 0 && costSummary === null) ? (
+        {(!showSidebar) ? (
           <>
             <h1>Healthcare Helper</h1>
             <form className="form" onSubmit={handleSubmit}>
@@ -96,7 +102,13 @@ function App() {
           </>
         ) : (
           <div className="response-card">
-            <p>{response}</p>
+            {loading ? (
+              <div className="loading-ellipsis">
+                <span></span><span></span><span></span>
+              </div>
+            ) : (
+              <p>{response}</p>
+            )}
             {recommendations.length > 0 && (
               <div>
                 <h3>Recommendations:</h3>
@@ -127,9 +139,15 @@ function App() {
               </div>
             )}
             {costSummary && (
-              <div>
+              <div className="cost-summary">
                 <h3>Cost Summary:</h3>
-                <pre>{JSON.stringify(costSummary, null, 2)}</pre>
+                <ul>
+                  {Object.entries(costSummary).map(([key, value]) => (
+                    <li key={key}>
+                      <strong>{key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}:</strong> {value}
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
           </div>
