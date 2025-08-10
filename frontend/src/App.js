@@ -23,30 +23,36 @@ function App() {
         body: JSON.stringify({ text: question }),
       });
       const data = await res.json();
-      if (data.response) {
-        setResponse("Here are your recommendations:");
-        setRecommendations(data.response.recommendations || []);
-        setCostSummary(data.response.cost_summary || null);
-        // Save chat history
-        setChats((prev) => [
-          ...prev,
-          {
-            question,
-            response: data.response,
-            recommendations: data.response.recommendations || [],
-            costSummary: data.response.cost_summary || null,
-          },
-        ]);
-        setActiveChat(chats.length); // Switch to new chat
-      } else if (data.error) {
-        setResponse(data.error);
-      } else {
-        setResponse("No recommendations found.");
-      }
+      // Ensure loading indicator is visible for at least 500ms
+      setTimeout(() => {
+        if (data.response) {
+          setResponse("Here are your recommendations:");
+          setRecommendations(data.response.recommendations || []);
+          setCostSummary(data.response.cost_summary || null);
+          // Save chat history
+          setChats((prev) => [
+            ...prev,
+            {
+              question,
+              response: data.response,
+              recommendations: data.response.recommendations || [],
+              costSummary: data.response.cost_summary || null,
+            },
+          ]);
+          setActiveChat(chats.length); // Switch to new chat
+        } else if (data.error) {
+          setResponse(data.error);
+        } else {
+          setResponse("No recommendations found.");
+        }
+        setLoading(false);
+      }, 500);
     } catch (error) {
-      setResponse("An error occurred. Please try again.");
+      setTimeout(() => {
+        setResponse("An error occurred. Please try again.");
+        setLoading(false);
+      }, 500);
     }
-    setLoading(false);
   };
 
   const showSidebar = recommendations.length > 0 || costSummary !== null;
@@ -97,7 +103,7 @@ function App() {
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
               ></textarea>
-              <button type="submit">Submit</button>
+              <button type="submit" disabled={loading} style={{opacity: loading ? 0.6 : 1, cursor: loading ? 'not-allowed' : 'pointer'}}>Submit</button>
             </form>
           </>
         ) : (
