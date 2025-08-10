@@ -109,8 +109,8 @@ function App() {
         ) : (
           <div className="response-card">
             {loading ? (
-              <div className="loading-ellipsis">
-                <span></span><span></span><span></span>
+              <div className="modern-spinner">
+                <div className="spinner"></div>
               </div>
             ) : (
               <p>{response}</p>
