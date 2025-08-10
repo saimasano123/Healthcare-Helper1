@@ -15,7 +15,8 @@ from langchain.chat_models import ChatOpenAI
 from langchain.chains import RetrievalQA
 
 # 🔑 Set your OpenAI API key
-# os.environ["OPENAI_API_KEY"] = "your-key-here"
+import os
+openai_api_key = os.getenv("OPENAI_API_KEY")
 
 def load_insurance_data(path: str):
     df = pd.read_csv(path)
