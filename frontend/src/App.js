@@ -13,7 +13,7 @@ function App() {
     setRecommendations([]);
     setCostSummary(null);
     try {
-      const res = await fetch("https://healthcare-helper.azurewebsites.net/api/nlp/query", {
+  const res = await fetch("https://healthcare-helper.onrender.com/api/nlp/query", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text: question }),

@@ -6,7 +6,7 @@ function QueryForm() {
   const [recommendations, setRecommendations] = useState([]);
 
   async function getRecommendations() {
-    const response = await fetch("http://localhost:8000/recommend", {
+  const response = await fetch("https://healthcare-helper.onrender.com/recommend", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ query, has_insurance: hasInsurance })
