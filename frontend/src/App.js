@@ -109,8 +109,9 @@ function App() {
         ) : (
           <div className="response-card">
             {loading ? (
-              <div className="modern-spinner">
-                <div className="spinner"></div>
+              <div className="chat-bubble loading-bubble">
+                <div className="spinner pulse"></div>
+                <span className="loading-message">Fetching recommendations...</span>
               </div>
             ) : (
               <p>{response}</p>
