@@ -96,14 +96,21 @@ function App() {
                 id="insurance-upload"
                 name="insurance"
                 accept=".pdf,.jpg,.jpeg,.png"
+                disabled={loading}
+                style={{opacity: loading ? 0.6 : 1, cursor: loading ? 'not-allowed' : 'pointer'}}
               />
               <textarea
                 rows="6"
                 placeholder="Describe your healthcare concern or question..."
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
+                disabled={loading}
+                style={{opacity: loading ? 0.6 : 1, cursor: loading ? 'not-allowed' : 'pointer'}}
               ></textarea>
               <button type="submit" disabled={loading} style={{opacity: loading ? 0.6 : 1, cursor: loading ? 'not-allowed' : 'pointer'}}>Submit</button>
+              {loading && (
+                <div className="loading-info">Results are loading, please wait...</div>
+              )}
             </form>
           </>
         ) : (
@@ -121,26 +128,47 @@ function App() {
                 <h3>Recommendations:</h3>
                 <div className="recommendations-list">
                   {recommendations.map((rec, idx) => (
-                    <div key={idx} className="recommendation-card">
-                      <div className="rec-header">
-                        <span className="rec-icon">💡</span>
-                        <strong>{rec.procedure_name}</strong>
-                      </div>
-                      <div className="rec-details">
-                        <span className="rec-provider">🏥 {rec.provider_name}</span>
-                        <span className="rec-location">📍 {rec.location}</span>
-                      </div>
-                      <div className="rec-meta">
-                        <span className="rec-cost">💲{rec.patient_pays}</span>
-                        <span className="rec-quality">⭐ {rec.quality_rating}/5</span>
-                        <span className="rec-relevance">🔎 Relevance: {rec.relevance_score}</span>
-                      </div>
-                      {rec.reason && (
-                        <div className="rec-reason">
-                          <em>Why this is recommended:</em> {rec.reason}
+                    rec.provider_name === 'CMS' ? (
+                      <div key={idx} className="recommendation-card cms-card">
+                        <div className="rec-header">
+                          <span className="rec-icon">📄</span>
+                          <strong>{rec.procedure_name || 'CMS Procedure'}</strong>
                         </div>
-                      )}
-                    </div>
+                        <div className="rec-details">
+                          <span className="rec-provider">🗂 Sourced from CMS Data</span>
+                          <span className="rec-location">{rec.location ? `📍 ${rec.location}` : ''}</span>
+                        </div>
+                        <div className="rec-meta">
+                          <span className="rec-cost">💲{rec.patient_pays}</span>
+                        </div>
+                        {rec.reason && (
+                          <div className="rec-reason">
+                            <em>{rec.reason}</em>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div key={idx} className="recommendation-card">
+                        <div className="rec-header">
+                          <span className="rec-icon">💡</span>
+                          <strong>{rec.procedure_name}</strong>
+                        </div>
+                        <div className="rec-details">
+                          <span className="rec-provider">🏥 {rec.provider_name}</span>
+                          <span className="rec-location">📍 {rec.location}</span>
+                        </div>
+                        <div className="rec-meta">
+                          <span className="rec-cost">💲{rec.patient_pays}</span>
+                          <span className="rec-quality">⭐ {rec.quality_rating}/5</span>
+                          <span className="rec-relevance">🔎 Relevance: {rec.relevance_score}</span>
+                        </div>
+                        {rec.reason && (
+                          <div className="rec-reason">
+                            <em>Why this is recommended:</em> {rec.reason}
+                          </div>
+                        )}
+                      </div>
+                    )
                   ))}
                 </div>
               </div>

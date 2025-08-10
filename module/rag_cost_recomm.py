@@ -543,25 +543,50 @@ class HealthcareAIAssistant:
         return patient
 
     def process_query(self, query: str, patient: PatientInfo) -> Dict[str, Any]:
-        """Process a patient's query and return comprehensive recommendations"""
+        """Process a patient's query and return comprehensive recommendations, including CMS data"""
         if not self.sample_data_loaded:
             self.load_sample_data()
 
         try:
-            # Get recommendations
+            # Get recommendations from existing engine
             recommendations = self.recommendation_engine.recommend_procedures(
                 query, patient, top_n=5
             )
 
-            if not recommendations:
+            # --- Integrate CMS ingestion pipeline ---
+            try:
+                from data_ingestion.module.cms_ingestion.cms_ingestion import ingest_pipeline
+                cms_chunks = ingest_pipeline()
+                # Filter CMS chunks by query keyword (simple match)
+                cms_recs = [chunk for chunk in cms_chunks if query.lower() in chunk.get('text', '').lower()]
+            except Exception as cms_e:
+                logger.warning(f"CMS ingestion failed: {cms_e}")
+                cms_recs = []
+
+            # Combine recommendations
+            all_recommendations = recommendations.copy()
+            if cms_recs:
+                # Format CMS chunks for frontend display
+                for chunk in cms_recs:
+                    all_recommendations.append({
+                        'procedure_name': chunk.get('procedure_name', 'CMS Procedure'),
+                        'provider_name': chunk.get('source_name', 'CMS'),
+                        'location': chunk.get('location', ''),
+                        'patient_pays': chunk.get('cost_avg', ''),
+                        'quality_rating': '',
+                        'relevance_score': '',
+                        'reason': f"Sourced from CMS data. See {chunk.get('source_url', '')}"
+                    })
+
+            if not all_recommendations:
                 return {"error": "No procedures found for your query"}
 
             # Get cost summary
-            cost_summary = self.cost_engine.generate_cost_summary(recommendations)
+            cost_summary = self.cost_engine.generate_cost_summary(all_recommendations)
 
             # Get alternatives
             alternatives = self.recommendation_engine.suggest_alternatives(
-                recommendations[0], recommendations
+                all_recommendations[0], all_recommendations
             )
 
             # Format response
@@ -569,11 +594,11 @@ class HealthcareAIAssistant:
                 "query": query,
                 "patient_location": patient.location,
                 "has_insurance": patient.insurance_plan is not None,
-                "recommendations": recommendations,
+                "recommendations": all_recommendations,
                 "cost_summary": cost_summary,
                 "alternatives": alternatives,
                 "financial_guidance": self._generate_financial_guidance(
-                    recommendations[0], patient
+                    all_recommendations[0], patient
                 )
             }
 
