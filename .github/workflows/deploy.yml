@@ -3,7 +3,7 @@ name: Deploy to Back4app
 on:
   push:
     branches:
-      - main  # or your deployment branch
+      - main  
 
 jobs:
   deploy:
@@ -24,3 +24,16 @@ jobs:
 
     - name: Push Docker image
       run: docker push prescottcassy/healthcare-helper:latest
+
+    - name: Run container with env vars
+        run: |
+          docker run -e OPEN_AI_KEY=${{ secrets.OPEN_AI_KEY }} \
+                    -e OTHER_VAR=${{ secrets.OTHER_VAR }} \
+                    prescottcassy/healthcare-helper:latest
+
+    - name: Run container with secrets
+        run: |
+          docker run -e OPEN_AI_KEY=${{ secrets.OPEN_AI_KEY }} \
+                      -e DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }} \
+                      -e DOCKER_PASSWORD=${{ secrets.DOCKER_PASSWORD }} \
+                      prescottcassy/healthcare-helper:latest

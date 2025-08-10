@@ -1,2 +1,7 @@
 FROM prescottcassy/healthcare-helper:latest
-# Add additional build steps below as needed
+
+
+# Accept env vars
+ENV OPEN_AI_KEY=""
+ENV OTHER_VAR=""
+
