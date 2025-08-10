@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import insurance, nlp
+from .routers import insurance, nlp, chat
 
 app = FastAPI(
     title="Healthcare AI Assistant Backend",
@@ -17,7 +17,8 @@ app.add_middleware(
 )
 
 app.include_router(insurance.router, prefix="/api/insurance", tags=["Insurance"])
-app.include_router(nlp.router, prefix="/api/nlp", tags=["NLP"])  # nlp router bhi add kar diya
+app.include_router(nlp.router, prefix="/api/nlp", tags=["NLP"])
+app.include_router(chat.router, prefix="/api/chat", tags=["Chat"])
 
 @app.get("/")
 def root():
