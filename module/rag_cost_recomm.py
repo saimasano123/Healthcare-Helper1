@@ -638,8 +638,8 @@ class HealthcareAIAssistant:
         return guidance
 
     def get_data_from_parse():
-    response = requests.get(PARSE_API_URL, headers=headers)
-    return response.json()
+         response = requests.get(PARSE_API_URL, headers=headers)
+         return response.json()
 
     def save_data_to_parse(data):
         response = requests.post(PARSE_API_URL, headers=headers, json=data)
