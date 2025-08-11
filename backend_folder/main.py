@@ -4,7 +4,8 @@ from .routers import insurance, nlp, chat
 import os
 
 import dotenv
-dotenv.load_dotenv()  # <-- Add this line to load .env variables
+from dotenv import load_dotenv
+load_dotenv()  # <-- Add this line to load .env variables
 
 OPEN_AI_KEY = os.getenv("OPEN_AI_KEY")
 
