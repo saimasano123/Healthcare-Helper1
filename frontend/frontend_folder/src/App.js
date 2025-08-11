@@ -7,7 +7,18 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 function App() {
   const [response, setResponse] = useState(null);
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
 
+function App() {
+  const [response, setResponse] = useState(null);
+
+  // Warn if using fallback BACKEND_URL
+  if (!process.env.REACT_APP_BACKEND_URL) {
+    console.warn(
+      'REACT_APP_BACKEND_URL is not set. Using default http://localhost:5000. ' +
+      'Set REACT_APP_BACKEND_URL in your environment to avoid this warning.'
+    );
+  }
   // Handler for file upload
   const handleFileUpload = async (event) => {
     const file = event.target.files[0];
