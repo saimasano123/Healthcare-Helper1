@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 
 // Use environment variable for backend URL
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+// Use environment variable for backend URL, with fallback and validation
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000";
+if (!process.env.REACT_APP_BACKEND_URL) {
+  console.warn("REACT_APP_BACKEND_URL is not set. Falling back to http://localhost:5000. Set the environment variable to avoid this warning.");
+}
 
 function QueryForm() {
   const [query, setQuery] = useState("");
